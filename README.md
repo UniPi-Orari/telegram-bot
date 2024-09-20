@@ -1,2 +1,1 @@
-# telegram-bot
-check repo name duh
+A telegram bot for unipi (CS) timetables
