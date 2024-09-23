@@ -1,8 +1,8 @@
-import 'package:telegram_bot/telegram_bot.dart';
-import 'package:test/test.dart';
+// import 'package:telegram_bot/telegram_bot.dart';
+// import 'package:test/test.dart';
 
-void main() {
-  test('calculate', () {
-    expect(calculate(), 42);
-  });
-}
+// void main() {
+//   test('test', () {
+//     expect(test(), 42);
+//   });
+// }

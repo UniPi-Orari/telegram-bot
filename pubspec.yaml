@@ -9,6 +9,12 @@ environment:
 # Add regular dependencies here.
 dependencies:
   televerse: 1.26.1
+  intl: ^0.19.0
+  unipi_orario_wrapper:
+    git:
+      url: https://github.com/UniPi-Orari/api-wrapper
+      ref: master # branch 
+      # ref: ea12e41 # commit hash, comes very handy
   # path: ^1.8.0
 
 dev_dependencies:
