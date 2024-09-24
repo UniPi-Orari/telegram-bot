@@ -1,19 +1,19 @@
-import 'dart:convert';
-
-import 'package:telegram_bot/telegram_bot.dart' as telegram_bot;
-import 'package:unipi_orario_wrapper/unipi_orario_wrapper.dart';
-import 'package:televerse/televerse.dart';
+import 'package:telegram_bot/telegram_bot.dart'
+    as telegram_bot; // api methods wrapper
+import 'package:televerse/televerse.dart'; // dart telegram api
 import 'dart:developer';
 
 import '../env.dart' as env;
 
 Bot bot = Bot(env.token);
 final conv = Conversation(bot);
+var botUptimeUsages = 0;
 
+// to-do by day filter, calendar selector (if possible, idk)
 void main() async {
   final menu = KeyboardMenu()
-      .text("Seleziona Corso", telegram_bot.courseHandler)
-      .text("Seleziona Giorno", telegram_bot.dayHandler)
+      //.text("/start", telegram_bot.start)
+      //.text("Seleziona Giorno", telegram_bot.dayHandler)
       // .text("Seleziona per CalendarId", calendarIdHandler)
       .resized();
   bot.attachMenu(menu);
@@ -23,6 +23,7 @@ void main() async {
   //   print("started new instance ${telegram_bot.test()}");
   // });
   bot.command('start', (ctx) async {
+    botUptimeUsages += 1;
     await ctx.reply(
         'Dimmi in che cazzo di corso vai(A,B,C) e sappi che funziona solo per informatica',
         replyMarkup: menu);
@@ -31,22 +32,31 @@ void main() async {
     // String res = courseCtx?.message?.text?.length == 1
     //     ? await telegram_bot.getLessons(courseCtx!.message!.text!)
     //     : "male";
-    List res = [];
+    var res = [];
     if (courseCtx?.message?.text?.length == 1) {
-      print(await telegram_bot.getLessons(courseCtx!.message!.text!));
-      res = await telegram_bot.getLessons(courseCtx.message!.text!);
-      // return Users.fromJson(jsonresponse[0]);
-      // res = await telegram_bot.getLessons(courseCtx.message!.text!);
+      res = await telegram_bot.getLessons(courseCtx!.message!.text!);
+    } else {
+      res.add("error");
+    }
+    if (res[0] == "error") {
+      courseCtx!.reply(
+          "Non mi prendere per il culo e matti un corso valido coglione ;D");
+    } else {
+      courseCtx!.reply(telegram_bot.formatLessons(res));
     }
 
-    courseCtx?.reply(res[0]);
-    print("started new instance $res");
+    print("$botUptimeUsages callback");
   });
 
-  bot.command('die', (ctx) async {
-    await ctx.reply('mori!');
-    print("morto");
+  bot.text('pisa', (ctx) async {
+    await ctx.reply('merda');
+    print("pisa merda");
   });
+
+  bot.help((ctx) async => await ctx.reply('''
+  /start: ti chiede il corso e ti fornisce gli orari delle lezioni
+  /help: minchia prova ad indovinare coglione
+  '''));
 
   bot.onError((err) {
     log(
@@ -56,6 +66,6 @@ void main() async {
     );
   });
 
-  print("bot starting..");
+  print("[bot starting..]");
   await bot.start();
 }
