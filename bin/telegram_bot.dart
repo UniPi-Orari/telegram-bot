@@ -4,12 +4,14 @@ import 'package:televerse/televerse.dart';
 import '../env.dart' as env;
 import 'package:telegram_bot/telegram_bot.dart' as telegram_bot;
 import 'dart:io' as io;
+import 'package:intl/intl.dart';
 
 final stopwatch = Stopwatch();
 Bot bot = Bot(env.token);
 final conv = Conversation(bot);
 var botUptimeUsages = 0;
 Map<String, dynamic> usersData = {};
+final dateFormatter = DateFormat('dd-MM-yyyy|HH:mm:ss');
 
 Future<void> loadUserData() async {
   var file = io.File('data/users_data.json');
@@ -77,6 +79,8 @@ void main() async {
 
   bot.callbackQuery('repeat_lessons', (ctx) async {
     final userId = ctx.chat!.id.toString();
+    final messageId = ctx.messageId!.toInt();
+    print(messageId);
 
     if (usersData.containsKey(userId)) {
       var userCourse = usersData[userId]['course'];
@@ -86,8 +90,13 @@ void main() async {
         var keyboard =
             telegram_bot.buildKeyboard(); // Ensure keyboard is always included
         if (lessons.isNotEmpty && lessons[0] != "error") {
-          await ctx.reply(telegram_bot.formatLessons(lessons),
-              parseMode: ParseMode.html, replyMarkup: keyboard);
+          await ctx.editMessageText(
+              "(aggiornato il ${dateFormatter.format(DateTime.now())})\n${telegram_bot.formatLessons(lessons)}",
+              parseMode: ParseMode.html,
+              replyMarkup: keyboard);
+          // await ctx.api.editMessageText(
+          //     ctx.id, messageId, telegram_bot.formatLessons(lessons),
+          //     parseMode: ParseMode.html, replyMarkup: keyboard);
         } else {
           await ctx.reply(
               "Non ci sono lezioni disponibili per il corso memorizzato",
