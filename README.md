@@ -1,11 +1,11 @@
 # 📚 Unipi Orari Informatica (UPIO) - Telegram Bot 💙
-<img src="logo.png" alt="logo" width="200"/>
+<img src="assets/logo.png" alt="logo" width="200"/>
 
 Questo Bot permette agli studenti di ottenere l'orario delle lezioni direttamente su **Telegram!**
 
 
 ## 🚀 Funzionalità
-<iframe src="https://giphy.com/embed/ebFG4jcnC1Ny8" width="480" height="331" style="" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
+<img src="assets/shocked-cat.gif" alt="shocked cat" width="200"/>
 
 - 📅 **Recupero orari delle lezioni**: Tramite [un wrapper dell'api](https://github.com/UniPi-Orari/api-wrapper) dell'università
 - 🔄 **Refresh dell'orario**: Basta premere un pulsante per ottenere l'orario aggiornato
