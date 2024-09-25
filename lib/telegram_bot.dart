@@ -1,37 +1,8 @@
-import 'package:televerse/televerse.dart';
 import 'package:unipi_orario_wrapper/unipi_orario_wrapper.dart';
 import 'package:intl/intl.dart';
+import 'package:televerse/televerse.dart';
 
-// Future è una funzione con async
-// Future<void> courseHandler(Context ctx) async {
-//   await ctx.reply("course");
-// }
-
-Future<void> dayHandler(Context ctx) async {
-  await ctx.reply("day");
-}
-
-// var botUptimeUsages = 0;
-// Future<void> start(Context ctx, conv) async {
-//   botUptimeUsages += 1;
-//   await ctx.reply(
-//     'Dimmi in che cazzo di corso vai(A,B,C) e sappi che funziona solo per informatica',
-//   );
-//   final courseCtx = await conv.waitForTextMessage(chatId: ctx.id);
-
-//   // String res = courseCtx?.message?.text?.length == 1
-//   //     ? await telegram_bot.getLessons(courseCtx!.message!.text!)
-//   //     : "male";
-//   var res = [];
-//   if (courseCtx?.message?.text?.length == 1) {
-//     res = await getLessons(courseCtx!.message!.text!);
-//   }
-
-//   courseCtx?.reply(formatLessons(res));
-//   print("$botUptimeUsages callback");
-// }
-
-Future getLessons(String course) async {
+Future<List<String>> getLessons(String course) async {
   final wrapper = WrapperService();
   var courseCounter = 0;
   List<Lesson> lessons = await wrapper.fetchLessonsObj(
@@ -41,7 +12,7 @@ Future getLessons(String course) async {
     endDate: DateTime.now().add(Duration(days: 7)),
   );
 
-  var output = [];
+  List<String> output = [];
   course = course.toUpperCase();
 
   for (var lesson in lessons) {
@@ -52,13 +23,13 @@ Future getLessons(String course) async {
       String formattedEndDate =
           DateFormat('dd-MM-yyyy - kk:mm').format(lesson.endDateTime);
       output.add(
-          "${lesson.name} [${lesson.courseName}] \nInizio lezione: $formattedStartDate \nFine lezione: $formattedEndDate");
+          "<b>${lesson.name}</b> [${lesson.courseName}] \n<i>🟢Inizio lezione:</i> <b>$formattedStartDate</b> \n<i>⛔Fine lezione:</i> <b>$formattedEndDate</b>");
     }
   }
   if (courseCounter == 0) {
     output.add("error");
-    output
-        .add("Non mi prendere per il culo e matti un corso valido coglione ;D");
+    output.add(
+        "<b><i>Non mi prendere per il culo e metti un corso valido coglione ;D</i></b>");
   }
   return output;
 }
@@ -69,4 +40,10 @@ String formatLessons(List lessons) {
     output += "$lesson\n\n";
   }
   return output;
+}
+
+InlineKeyboard buildKeyboard() {
+  final keyboard = InlineKeyboard();
+  keyboard.add("Ricarica", "repeat_lessons");
+  return keyboard;
 }
